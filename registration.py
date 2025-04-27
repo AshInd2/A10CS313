@@ -368,7 +368,13 @@ class Graph:
             m = 0
             for j in self.get_adjacent_vertices(v):
                 d_p = 1 + d(j)
-                m = max(m, d_p)
+                if d_p > m:
+                    m = d_p
+            self.vertices[v].depth = m
+            return m
+        v_s = len(self.vertices)
+        for i in range(v_s):
+            d(i)
 
 
     def has_cycle(self):
@@ -377,23 +383,23 @@ class Graph:
 
         post: returns True if there is a cycle and False otherwise.
         """
-        def d_s(i, v, r):
-            v[i] = True
-            r[i] = True
-            for j in self.get_adjacent_vertices(i):
-                if r[j]:
-                    return True
-                elif not v[j]:
-                    if d_s(j, v, r):
+        def dfs(v, r):
+            self.vertices[v].visited = True
+            r[v] = True
+            for i in self.get_adjacent_vertices(v):
+                if not self.vertices[i].visited:
+                    if dfs(i, r):
                         return True
-            r[i] = False
+                    elif r[i]:
+                        return True
+            r[v] = False
             return False
-        n = len(self.vertices)
-        v = [False] * n
-        r = [False] * n
-        for i in range (n):
-            if not v[i]:
-                if d_s(i, v, r):
+        v_s = len(self.vertices)
+        s_r = v_s * [False]
+
+        for j in range(v_s):
+            if not self.vertices[j].visited:
+                if dfs(j, s_r):
                     return True
 
         return False
@@ -408,24 +414,22 @@ class Graph:
         post: returns a 2D list of strings, where each inner list represents a semester
         """
         self.compute_depth()
-        d = {}
-        v_s = len(self.vertices) 
-        for i in range(v_s):
-            d[i] = 0
-            for u in range(v_s):
-                for v in self.get_adjacent_vertices(u):
-                    d[v] += 1
-        g_p = set(d)            
+        v_s = len(self.vertices)
+        d = v_s * [0]
+        for u in range(v_s):
+            for v in self.get_adjacent_vertices(u):
+                d[v] += 1
+        g_p = set(d)
         p_h = BinaryHeap()
-        for x, y in d.items():
-            if y == 0:
+        for x in range(v_s):
+            if d[x] == 0:
                 p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         courses = []
         while g_p:
             t = []
             u = []
 
-            for s in range(4):
+            for _ in range(4):
                 if p_h.is_empty():
                     break
                 _,_,x_i = p_h.delete()
@@ -437,7 +441,7 @@ class Graph:
                         u.append(w)
             courses.append(t)
             for x in u:
-                p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))            
+                p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         return courses
 
 

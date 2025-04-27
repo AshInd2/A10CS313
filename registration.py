@@ -412,9 +412,9 @@ class Graph:
         v_s = len(self.vertices) 
         for i in range(v_s):
             d[i] = 0
-            for s in range(v_s):
-                for j in self.get_adjacent_vertices(s):
-                    d[j] += 1
+            for u in range(v_s):
+                for v in self.get_adjacent_vertices(u):
+                    d[v] += 1
         g_p = set(d)            
         p_h = BinaryHeap()
         for x, y in d.items():
@@ -425,7 +425,7 @@ class Graph:
             t = []
             u = []
 
-            for v in range(4):
+            for s in range(4):
                 if p_h.is_empty():
                     break
                 _,_,x_i = p_h.delete()
@@ -436,8 +436,8 @@ class Graph:
                     if d[w] == 0:
                         u.append(w)
             courses.append(t)
-            for k in u:
-                p_h.insert((-self.vertices[k].depth, self.vertices[k].label, k))              
+            for x in u:
+                p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))            
         return courses
 
 

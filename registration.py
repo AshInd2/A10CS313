@@ -419,7 +419,7 @@ class Graph:
         for u in range(v_s):
             for v in self.get_adjacent_vertices(u):
                 d[v] += 1
-        g_p = set(d)
+        g_p = set(range(v_s))
         p_h = BinaryHeap()
         for x in range(v_s):
             if d[x] == 0:

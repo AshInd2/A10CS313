@@ -388,9 +388,9 @@ class Graph:
             r[v] = True
             for i in self.get_adjacent_vertices(v):
                 if not self.vertices[i].visited:
-                    if dfs(i, r):
+                    if r[i]:
                         return True
-                    elif r[i]:
+                    if dfs(i, r):
                         return True
             r[v] = False
             return False
@@ -419,22 +419,22 @@ class Graph:
         for u in range(v_s):
             for v in self.get_adjacent_vertices(u):
                 d[v] += 1
-        g_p = set(range(v_s))
         p_h = BinaryHeap()
+        g_p = set(range(v_s))
         for x in range(v_s):
             if d[x] == 0:
                 p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         courses = []
         while g_p:
-            t = []
             u = []
+            t = []
 
             for _ in range(4):
                 if p_h.is_empty():
                     break
-                _,_,x_i = p_h.delete()
-                t.append(self.vertices[x_i].label)
+                x_i = p_h.delete()
                 g_p.remove(x_i)
+                t.append(self.vertices[x_i].label)
                 for w in self.get_adjacent_vertices(x_i):
                     d[w] -= 1
                     if d[w] == 0:

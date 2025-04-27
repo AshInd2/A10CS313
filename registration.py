@@ -388,9 +388,9 @@ class Graph:
             r[v] = True
             for i in self.get_adjacent_vertices(v):
                 if not self.vertices[i].visited:
-                    if d_s(i, r):
-                        return True
                     if r[i]:
+                        return True
+                    elif d_s(i, r):
                         return True
             r[v] = False
             return False
@@ -428,7 +428,6 @@ class Graph:
         while g_p:
             u = []
             t = []
-
             for _ in range(4):
                 if p_h.is_empty():
                     break
@@ -458,8 +457,8 @@ def main():
     e_g = int(sys.stdin.readline().strip())
     for _ in range(e_g):
         l_n = sys.stdin.readline().strip().split()
-        i_x = graph.get_index(l_n[1])
-        t_x = graph.get_index(l_n[0])
+        i_x = graph.get_index(l_n[0])
+        t_x = graph.get_index(l_n[1])
         graph.add_edge(i_x,t_x)
     v_s = int(sys.stdin.readline().strip())
     for _ in range(v_s):

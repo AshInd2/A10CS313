@@ -433,7 +433,7 @@ class Graph:
                 if p_h.is_empty():
                     break
                 _,_,x_i = p_h.delete()
-                u.append(self.vertices[x_i].label)
+                t.append(self.vertices[x_i].label)
                 g_p.remove(x_i)
                 for w in self.get_adjacent_vertices(x_i):
                     d[w] -= 1

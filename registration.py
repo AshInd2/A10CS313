@@ -455,16 +455,16 @@ def main():
 
     # create a Graph object
     graph = Graph()
+    v_s = int(sys.stdin.readline().strip())
+    for _ in range(v_s):
+        b = sys.stdin.readline().strip()
+        graph.add_vertex(b)
     e_g = int(sys.stdin.readline().strip())
     for _ in range(e_g):
         l_n = sys.stdin.readline().strip().split()
         i_x = graph.get_index(l_n[1])
         t_x = graph.get_index(l_n[0])
         graph.add_edge(i_x,t_x)
-    v_s = int(sys.stdin.readline().strip())
-    for _ in range(v_s):
-        b = sys.stdin.readline().strip()
-        graph.add_vertex(b)
 
     # read the number of vertices
 

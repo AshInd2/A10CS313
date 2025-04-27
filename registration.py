@@ -383,14 +383,14 @@ class Graph:
 
         post: returns True if there is a cycle and False otherwise.
         """
-        def d_s(v, r):
+        def dfs(v, r):
             self.vertices[v].visited = True
             r[v] = True
             for i in self.get_adjacent_vertices(v):
                 if not self.vertices[i].visited:
-                    if r[i]:
+                    if dfs(i, r):
                         return True
-                    elif d_s(i, r):
+                    elif r[i]:
                         return True
             r[v] = False
             return False
@@ -399,10 +399,11 @@ class Graph:
 
         for j in range(v_s):
             if not self.vertices[j].visited:
-                if d_s(j, s_r):
+                if dfs(j, s_r):
                     return True
 
         return False
+
 
 
     def get_registration_plan(self):
@@ -419,21 +420,22 @@ class Graph:
         for u in range(v_s):
             for v in self.get_adjacent_vertices(u):
                 d[v] += 1
+        g = set(range(v_s))
         p_h = BinaryHeap()
-        g_p = set(range(v_s))
         for x in range(v_s):
             if d[x] == 0:
                 p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         courses = []
-        while g_p:
-            u = []
+        while g:
             t = []
+            u = []
+
             for _ in range(4):
                 if p_h.is_empty():
                     break
                 _,_,x_i = p_h.delete()
                 t.append(self.vertices[x_i].label)
-                g_p.remove(x_i)
+                g.remove(x_i)
                 for w in self.get_adjacent_vertices(x_i):
                     d[w] -= 1
                     if d[w] == 0:
@@ -454,16 +456,16 @@ def main():
 
     # create a Graph object
     graph = Graph()
-    e_g = int(sys.stdin.readline().strip())
-    for _ in range(e_g):
-        l_n = sys.stdin.readline().strip().split()
-        i_x = graph.get_index(l_n[0])
-        t_x = graph.get_index(l_n[1])
-        graph.add_edge(i_x,t_x)
     v_s = int(sys.stdin.readline().strip())
     for _ in range(v_s):
         b = sys.stdin.readline().strip()
         graph.add_vertex(b)
+    g_e = int(sys.stdin.readline().strip())
+    for _ in range(g_e):
+        l_n = sys.stdin.readline().strip().split()
+        i_x = graph.get_index(l_n[0])
+        t_x = graph.get_index(l_n[1])
+        graph.add_edge(i_x,t_x)
 
     # read the number of vertices
 

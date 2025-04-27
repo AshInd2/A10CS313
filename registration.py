@@ -383,14 +383,14 @@ class Graph:
 
         post: returns True if there is a cycle and False otherwise.
         """
-        def dfs(v, r):
+        def d_s(v, r):
             self.vertices[v].visited = True
             r[v] = True
             for i in self.get_adjacent_vertices(v):
                 if not self.vertices[i].visited:
-                    if r[i]:
+                    if d_s(i, r):
                         return True
-                    if dfs(i, r):
+                    if r[i]:
                         return True
             r[v] = False
             return False
@@ -399,7 +399,7 @@ class Graph:
 
         for j in range(v_s):
             if not self.vertices[j].visited:
-                if dfs(j, s_r):
+                if d_s(j, s_r):
                     return True
 
         return False
@@ -419,15 +419,15 @@ class Graph:
         for u in range(v_s):
             for v in self.get_adjacent_vertices(u):
                 d[v] += 1
-        p_h = BinaryHeap()
         g_p = set(range(v_s))
+        p_h = BinaryHeap()
         for x in range(v_s):
             if d[x] == 0:
                 p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         courses = []
         while g_p:
-            u = []
             t = []
+            u = []
 
             for _ in range(4):
                 if p_h.is_empty():
@@ -455,16 +455,16 @@ def main():
 
     # create a Graph object
     graph = Graph()
-    v_s = int(sys.stdin.readline().strip())
-    for _ in range(v_s):
-        b = sys.stdin.readline().strip()
-        graph.add_vertex(b)
     e_g = int(sys.stdin.readline().strip())
     for _ in range(e_g):
         l_n = sys.stdin.readline().strip().split()
         i_x = graph.get_index(l_n[1])
         t_x = graph.get_index(l_n[0])
         graph.add_edge(i_x,t_x)
+    v_s = int(sys.stdin.readline().strip())
+    for _ in range(v_s):
+        b = sys.stdin.readline().strip()
+        graph.add_vertex(b)
 
     # read the number of vertices
 

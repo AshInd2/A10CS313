@@ -368,7 +368,7 @@ class Graph:
             m = 0
             for j in self.get_adjacent_vertices(v):
                 d_p = 1 + d(j)
-                m = max(m, d)
+                m = max(m, d_p)
 
 
     def has_cycle(self):
@@ -407,29 +407,40 @@ class Graph:
         pre: a valid registration plan exists.
         post: returns a 2D list of strings, where each inner list represents a semester
         """
-        v_s = len(self.vertices)
-        n_e = [0] * v_s
-        for i in range (v_s):
-            for s in self.get_adjacent_vertices(i):
-                n_e[s] += 1
-        k = [False] * v_s
+        self.compute_depth()
+        d = {}
+        v_s = len(self.vertices) 
+        for i in range(v_s):
+            d[i] = 0
+            for s in range(v_s):
+                for j in self.get_adjacent_vertices(s):
+                    d[j] += 1
+        g_p = set(d)            
+        p_h = BinaryHeap()
+        for x, y in d.items():
+            if y == 0:
+                p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         courses = []
-        while not all(k):
-            v = []
-            for r in range(v_s):
-                if n_e[r] == 0 and not k[r]:
-                    v.append(r)
-            v.sort(key = lambda index: (-self.vertices[index].d_p, self.vertices[index].label))       
+        while g_p:
             t = []
-            for a in v[:4]:
-                t.append(self.vertices[a].label)
-                k[a] = True
-                for g in self.get_adjacent_vertices(a):
-                    n_e[g] -= 1
-            courses.append(v)
+            u = []
 
-
+            for v in range(4):
+                if p_h.is_empty():
+                    break
+                _,_,x_i = p_h.delete()
+                u.append(self.vertices[x_i].label)
+                g_p.remove(x_i)
+                for w in self.get_adjacent_vertices(x_i):
+                    d[w] -= 1
+                    if d[w] == 0:
+                        u.append(w)
+            courses.append(t)
+            for k in u:
+                p_h.insert((-self.vertices[k].depth, self.vertices[k].label, k))              
         return courses
+
+
 
 
 def main():
@@ -441,11 +452,11 @@ def main():
     # create a Graph object
     graph = Graph()
     v_s = int(sys.stdin.readline().strip())
-    for i in range(v_s):
+    for _ in range(v_s):
         b = sys.stdin.readline().strip()
         graph.add_vertex(b)
     e_g = int(sys.stdin.readline().strip())
-    for j in range(e_g):
+    for _ in range(e_g):
         l_n = sys.stdin.readline().strip().split()
         i_x = graph.get_index(l_n[0])
         t_x = graph.get_index(l_n[1])

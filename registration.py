@@ -383,14 +383,14 @@ class Graph:
 
         post: returns True if there is a cycle and False otherwise.
         """
-        def dfs(v, r):
+        def d_s(v, r):
             self.vertices[v].visited = True
             r[v] = True
             for i in self.get_adjacent_vertices(v):
                 if not self.vertices[i].visited:
-                    if dfs(i, r):
+                    if d_s(i, r):
                         return True
-                    elif r[i]:
+                    if r[i]:
                         return True
             r[v] = False
             return False
@@ -399,7 +399,7 @@ class Graph:
 
         for j in range(v_s):
             if not self.vertices[j].visited:
-                if dfs(j, s_r):
+                if d_s(j, s_r):
                     return True
 
         return False
@@ -427,8 +427,8 @@ class Graph:
                 p_h.insert((-self.vertices[x].depth, self.vertices[x].label, x))
         courses = []
         while g:
-            t = []
             u = []
+            t = []
 
             for _ in range(4):
                 if p_h.is_empty():
